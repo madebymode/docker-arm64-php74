@@ -17,7 +17,7 @@ docker-compose.yml
       - ./storage:/app/storage:delegated
       # cache static assets bc fpm doesn't need to update css or js
       - ./public:/app/public:cached
-      # additional php config
+      # additional php config REQUIRED
       - ./docker-conf/php-ini:/usr/local/etc/php/custom.d
     env_file:
       - .env
