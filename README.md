@@ -22,6 +22,7 @@ docker-compose.yml
     env_file:
       - .env
     environment:
+      # note that apline has dif dir structures: /user/local/etc - conf.d need to be scanned here for all modules from image
       - PHP_INI_SCAN_DIR=/usr/local/etc/php/custom.d:/usr/local/etc/php/conf.d/
       - COMPOSER_AUTH=${COMPOSER_AUTH}
 ```
