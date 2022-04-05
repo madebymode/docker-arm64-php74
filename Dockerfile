@@ -25,7 +25,8 @@ RUN apk add --update --no-cache \
     mysql-client \
     libzip-dev \
     bash \
-    shared-mime-info
+    shared-mime-info \ 
+    git
 
 # Configure & Install Extension
 RUN docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/include/ && \
