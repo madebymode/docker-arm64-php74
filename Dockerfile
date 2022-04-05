@@ -26,7 +26,9 @@ RUN apk add --update --no-cache \
     libzip-dev \
     bash \
     shared-mime-info \ 
-    git
+    git \
+    curl \
+    wget
 
 # Configure & Install Extension
 RUN docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/include/ && \
