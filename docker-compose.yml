@@ -5,6 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        HOST_ENV: production
     user: '${HOST_USER_UID:-1000}:${HOST_USER_GID:-1000}' # Uses the host's environment variables if they exist, otherwise uses the default values 1000:1000
     volumes:
       - ./app:/app

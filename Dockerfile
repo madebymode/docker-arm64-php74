@@ -1,5 +1,7 @@
 FROM php:7.4-fpm-alpine3.15
 
+ARG HOST_ENV=development
+
 # Add Repositories
 RUN rm -f /etc/apk/repositories &&\
     echo "http://dl-cdn.alpinelinux.org/alpine/v3.15/main" >> /etc/apk/repositories && \
@@ -52,10 +54,18 @@ RUN docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/i
     bcmath \
     zip \
     fileinfo \
-    soap && \
+    soap \
+    opcache && \
     apk del -f .build-deps
 
-RUN ln -sf "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/conf.d/php.ini"
+# Enable or disable opcache based on HOST_ENV
+RUN if [ "$HOST_ENV" = "production" ]; then \
+        mv "$PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini" "$PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini"; \
+    else \
+        mv "$PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini" "$PHP_INI_DIR/conf.d/docker-php-ext-opcache.disabled"; \
+    fi
+
+RUN if [ "$HOST_ENV" = "production" ]; then ln -sf "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/conf.d/php.ini"; else ln -sf "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/conf.d/php.ini"; fi
 
 # Create and configure status.conf for PHP-FPM status page
 RUN echo '[www]' > /usr/local/etc/php-fpm.d/status.conf && \

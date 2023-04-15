@@ -37,9 +37,13 @@ echo "export HOST_USER_GID=$(id -g)" >> ~/.bash_profile && echo "export HOST_USE
 docker-compose.yml
 ```yaml
   php74:
-    platform: linux/arm64/v8
-    image: madebymode/php74-arm64-alpine
-    build: github.com/madebymode/docker-arm64-php74.git
+    image: madebymode/php74-alpine:latest
+    build:
+      context: github.com/madebymode/docker-arm64-php74.git
+      dockerfile: Dockerfile
+      args:
+        # production will enable opcache and production php.ini settings, use HOST_ENV: development for debugging
+        HOST_ENV: production
     # optional: not needed if you're running macOS
     user: '${HOST_USER_UID:-1000}:${HOST_USER_GID:-1000}' # Uses the host's environment variables if they exist, otherwise uses the default values 1000:1000
     # optional: disable if you're running behind a proxy like traefik
