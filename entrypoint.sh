@@ -18,5 +18,5 @@ else
     ln -sf "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/conf.d/php.ini"
 fi
 
-# Execute the passed command
-exec "$@"
+# Execute the passed command as www-data user
+exec su-exec www-data "$@"
