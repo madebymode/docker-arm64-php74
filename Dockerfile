@@ -57,7 +57,11 @@ RUN docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/i
 
 RUN ln -sf "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/conf.d/php.ini"
 
-#health check - enable in compose files
+# Create and configure status.conf for PHP-FPM status page
+RUN echo '[www]' > /usr/local/etc/php-fpm.d/status.conf && \
+    echo 'pm.status_path = /status' >> /usr/local/etc/php-fpm.d/status.conf
+
+#health check script
 COPY ./php-fpm-healthcheck /usr/local/bin/
 RUN chmod +x /usr/local/bin/php-fpm-healthcheck
 
