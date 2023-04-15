@@ -49,8 +49,6 @@ docker-compose.yml
     build:
       context: github.com/madebymode/docker-arm64-php74.git
       dockerfile: Dockerfile
-    # optional: not needed if you're running macOS
-    user: '${HOST_USER_UID:-1000}:${HOST_USER_GID:-1000}' # Uses the host's environment variables if they exist, otherwise uses the default values 1000:1000
     # optional: disable if you're running behind a proxy like traefik
     ports:
       - "9000:9000"
@@ -70,10 +68,14 @@ docker-compose.yml
     environment:
       # note that apline has dif dir structures: /user/local/etc - conf.d need to be scanned here for all modules from image
       - PHP_INI_SCAN_DIR=/usr/local/etc/php/custom.d:/usr/local/etc/php/conf.d/
+      # composer settings
       - COMPOSER_AUTH=${COMPOSER_AUTH}
-      # optional: if you wanna run as root
       - COMPOSER_ALLOW_SUPERUSER=1
-      # set to development to disable opcache and swap to development php.ini settings
+      # these are CRITICAL
+      - HOST_USER_UID=${HOST_USER_UID:-1000}
+      - HOST_USER_GID=${HOST_USER_GID:-1000}
       - HOST_ENV=${HOST_ENV:-production}
+      # set to development to disable opcache and swap to development php.ini settings
+
 
 ```

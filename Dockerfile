@@ -1,9 +1,9 @@
-FROM php:7.4-fpm-alpine3.15
+FROM php:7.4-fpm-alpine3.16
 
 # Add Repositories
 RUN rm -f /etc/apk/repositories &&\
-    echo "http://dl-cdn.alpinelinux.org/alpine/v3.15/main" >> /etc/apk/repositories && \
-    echo "http://dl-cdn.alpinelinux.org/alpine/v3.15/community" >> /etc/apk/repositories
+    echo "http://dl-cdn.alpinelinux.org/alpine/v3.16/main" >> /etc/apk/repositories && \
+    echo "http://dl-cdn.alpinelinux.org/alpine/v3.16/community" >> /etc/apk/repositories
 
 # Add Build Dependencies
 RUN apk add --no-cache --virtual .build-deps \
