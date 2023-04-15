@@ -19,4 +19,5 @@ else
 fi
 
 # Execute the passed command as www-data user
-exec su-exec www-data "$@"
+exec gosu www-data "$@"
+
