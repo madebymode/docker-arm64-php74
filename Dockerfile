@@ -13,7 +13,10 @@ RUN apk add --no-cache --virtual .build-deps \
     libxml2-dev \
     bzip2-dev \
     zip \
-    libwebp-dev
+    libwebp-dev \
+    icu-dev \
+    freetype-dev \
+    libzip-dev
 
 # Add App Dependencies
 RUN apk add --update --no-cache \
@@ -21,10 +24,7 @@ RUN apk add --update --no-cache \
     pngquant \
     optipng \
     vim \
-    icu-dev \
-    freetype-dev \
     mysql-client \
-    libzip-dev \
     bash \
     shared-mime-info \
     git \
@@ -34,7 +34,6 @@ RUN apk add --update --no-cache \
 
 # Configure & Install Extension
 RUN docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/include/ --with-webp=/usr/include/ && \
-
     docker-php-ext-install \
     mysqli \
     pdo \
@@ -49,21 +48,17 @@ RUN docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/i
     bcmath \
     zip \
     fileinfo \
-    soap
+    soap && \
+    apk del -f .build-deps
 
 RUN ln -sf "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/conf.d/php.ini"
 
-#composer 1.10
+# Install Composer 1.10
 RUN curl -sS https://getcomposer.org/installer | php -- --version=1.10.22 --install-dir=/usr/local/bin --filename=composer
-#composer 2
+# Install Composer 2
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer2
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV PATH="./vendor/bin:$PATH"
-
-RUN apk update
-
-# Remove Build Dependencies
-RUN apk del -f .build-deps
 
 # Setup Working Dir
 WORKDIR /app
