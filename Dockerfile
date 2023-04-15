@@ -13,7 +13,8 @@ RUN apk add --no-cache --virtual .build-deps \
     libxml2-dev \
     bzip2-dev \
     zip \
-    libwebp-dev
+    libwebp-dev \
+    openssl-dev
 
 # Add App Dependencies
 RUN apk add --update --no-cache \
