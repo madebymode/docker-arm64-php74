@@ -53,12 +53,10 @@ RUN docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/i
     zip \
     fileinfo \
     soap \
+    phar \
     opcache && \
     apk del -f .build-deps
 
-# Install and enable phar
-RUN apk add --no-cache php7-phar && \
-    docker-php-ext-enable phar
 
 LABEL afterapk="php-fpm-alpine-$PHP_VERSION"
 
