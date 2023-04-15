@@ -56,9 +56,9 @@ RUN docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/i
 
 RUN ln -sf "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/conf.d/php.ini"
 
-# Create and configure status.conf for PHP-FPM status page
-RUN echo '[www]' > /usr/local/etc/php-fpm.d/status.conf && \
-    echo 'pm.status_path = /status' >> /usr/local/etc/php-fpm.d/status.conf
+#health check - enable in compose files
+COPY ./php-fpm-healthcheck /usr/local/bin/
+RUN chmod +x /usr/local/bin/php-fpm-healthcheck
 
 # Install Composer 1.10
 RUN curl -sS https://getcomposer.org/installer | php -- --version=1.10.22 --install-dir=/usr/local/bin --filename=composer
@@ -71,5 +71,5 @@ ENV PATH="./vendor/bin:$PATH"
 WORKDIR /app
 
 # Add Healthcheck
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD SCRIPT_NAME=/status SCRIPT_FILENAME=/status QUERY_STRING= REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000 || exit 1
+HEALTHCHECK --interval=5s --timeout=1s \
+    CMD php-fpm-healthcheck || exit 1
