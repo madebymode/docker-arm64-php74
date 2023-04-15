@@ -56,7 +56,7 @@ RUN docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/i
     opcache && \
     apk del -f .build-deps
 
-LABEL afterapk
+LABEL afterapk="php-fpm-alpine-$PHP_VERSION"
 
 ARG HOST_ENV=development
 
