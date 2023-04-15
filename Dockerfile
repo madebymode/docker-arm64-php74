@@ -60,9 +60,15 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV PATH="./vendor/bin:$PATH"
 
+# Create and configure status.conf for PHP-FPM status page
+RUN echo '[www]' > /usr/local/etc/php-fpm.d/status.conf && \
+    echo 'pm.status_path = /status' >> /usr/local/etc/php-fpm.d/status.conf
+
+
 # Setup Working Dir
 WORKDIR /app
 
 # Add Healthcheck
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD curl --fail --silent http://localhost:9000/ping || exit 1
+    CMD SCRIPT_NAME=/status SCRIPT_FILENAME=/status QUERY_STRING= REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000 || exit 1
+
