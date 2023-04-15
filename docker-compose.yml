@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  php-fpm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    user: '${HOST_USER_UID:-1000}:${HOST_USER_GID:-1000}' # Uses the host's environment variables if they exist, otherwise uses the default values 1000:1000
+    volumes:
+      - ./app:/app
+    environment:
+      - COMPOSER_ALLOW_SUPERUSER=1
