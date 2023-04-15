@@ -57,25 +57,15 @@ RUN docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/i
     opcache && \
     apk del -f .build-deps
 
-
 LABEL afterapk="php-fpm-alpine-$PHP_VERSION"
 
 ARG HOST_ENV=development
-
-# Enable or disable opcache based on HOST_ENV
-RUN if [ "$HOST_ENV" = "production" ]; then \
-        mv "$PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini" "$PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini"; \
-    else \
-        mv "$PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini" "$PHP_INI_DIR/conf.d/docker-php-ext-opcache.disabled"; \
-    fi
-
-RUN if [ "$HOST_ENV" = "production" ]; then ln -sf "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/conf.d/php.ini"; else ln -sf "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/conf.d/php.ini"; fi
 
 # Create and configure status.conf for PHP-FPM status page
 RUN echo '[www]' > /usr/local/etc/php-fpm.d/status.conf && \
     echo 'pm.status_path = /status' >> /usr/local/etc/php-fpm.d/status.conf
 
-#health check script
+# Health check script
 COPY ./php-fpm-healthcheck /usr/local/bin/
 RUN chmod +x /usr/local/bin/php-fpm-healthcheck
 
@@ -92,3 +82,12 @@ WORKDIR /app
 # Add Healthcheck
 HEALTHCHECK --interval=5s --timeout=1s \
     CMD php-fpm-healthcheck || exit 1
+
+# Copy entrypoint script
+COPY entrypoint.sh /usr/local/bin/entrypoint
+
+# Set permissions for the entrypoint script
+RUN chmod +x /usr/local/bin/entrypoint
+
+# Set entrypoint
+ENTRYPOINT ["entrypoint"]
