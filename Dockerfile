@@ -33,7 +33,8 @@ RUN apk add --update --no-cache \
     libzip-dev \
     bzip2 \
     libwebp \
-    libpng
+    libpng \
+    fcgi
 
 # Configure & Install Extension
 RUN docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/include/ --with-webp=/usr/include/ && \
