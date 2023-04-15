@@ -1,7 +1,5 @@
 FROM php:7.4-fpm-alpine3.15
 
-ARG HOST_ENV=development
-
 # Add Repositories
 RUN rm -f /etc/apk/repositories &&\
     echo "http://dl-cdn.alpinelinux.org/alpine/v3.15/main" >> /etc/apk/repositories && \
@@ -57,6 +55,10 @@ RUN docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/i
     soap \
     opcache && \
     apk del -f .build-deps
+
+LABEL afterapk
+
+ARG HOST_ENV=development
 
 # Enable or disable opcache based on HOST_ENV
 RUN if [ "$HOST_ENV" = "production" ]; then \
