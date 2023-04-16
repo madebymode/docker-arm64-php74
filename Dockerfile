@@ -95,3 +95,6 @@ RUN chmod +x /usr/local/bin/entrypoint
 
 # Set entrypoint
 ENTRYPOINT ["entrypoint"]
+
+# Set default command
+CMD ["php-fpm", "-F"]
