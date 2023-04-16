@@ -18,6 +18,10 @@ else
     ln -sf "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/conf.d/php.ini"
 fi
 
-# Execute the passed command as www-data user
-exec gosu www-data "$@"
-
+# Check if EXEC_AS_ROOT is set to 1 and switch to root user if true
+if [ "$EXEC_AS_ROOT" = "1" ]; then
+  exec "$@"
+else
+  # Switch to the www-data user
+  su -s /bin/sh -c 'exec "$0" "$@"' www-data -- "$@"
+fi

@@ -58,26 +58,6 @@ RUN docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/i
     opcache && \
     apk del -f .build-deps
 
-
-# Install gosu
-RUN set -eux; \
-    apk add --no-cache --virtual .gosu-deps \
-        dpkg \
-        gnupg \
-    ; \
-    arch="$(dpkg-architecture --query DEB_BUILD_ARCH_CPU)"; \
-    case "$arch" in \
-        amd64) gosuArch='amd64' ;; \
-        arm64) gosuArch='arm64' ;; \
-        *) echo >&2 "unsupported architecture: $arch"; exit 1 ;; \
-    esac; \
-    wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/1.14/gosu-$gosuArch"; \
-    wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/1.14/gosu-$gosuArch.asc"; \
-    chmod +x /usr/local/bin/gosu; \
-    gosu --version; \
-    gosu nobody true; \
-    apk del .gosu-deps
-
 LABEL afterapk="php-fpm-alpine-$PHP_VERSION"
 
 ARG HOST_ENV=development

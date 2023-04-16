@@ -75,6 +75,7 @@ docker-compose.yml
       - HOST_USER_UID=${HOST_USER_UID:-1000}
       - HOST_USER_GID=${HOST_USER_GID:-1000}
       - HOST_ENV=${HOST_ENV:-production}
+      - EXEC_AS_ROOT: 0
       # set to development to disable opcache and swap to development php.ini settings
 
 
