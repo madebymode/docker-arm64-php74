@@ -11,11 +11,11 @@ adduser -u $USER_UID -D -S -G www-data www-data
 
 # Enable or disable opcache based on HOST_ENV
 if [ "$HOST_ENV" = "production" ]; then
-    mv "$PHP_INI_DIR/conf.d/docker-php-ext-opcache.disabled" "$PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini"
-    ln -sf "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/conf.d/php.ini"
+    cp -f "$PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini" "$PHP_INI_DIR/conf.d/"
+    ln -sf "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 else
-    mv "$PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini" "$PHP_INI_DIR/conf.d/docker-php-ext-opcache.disabled"
-    ln -sf "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/conf.d/php.ini"
+    rm -f "$PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini"
+    ln -sf "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 fi
 
 # Check if EXEC_AS_ROOT is set to 1 and switch to root user if true
