@@ -66,10 +66,11 @@ ARG HOST_USER_UID
 # Change www-data user and group IDs to match the host user and group IDs if the arguments are passed
 RUN if [ -n "$HOST_USER_UID" ] && [ -n "$HOST_USER_GID" ]; then \
         apk add shadow && \
-        usermod -u $HOST_USER_UID www-data && \
-        groupmod -g $HOST_USER_GID www-data && \
+        addgroup -g $HOST_USER_GID hostgroup && \
+        adduser -D -u $HOST_USER_UID -G hostgroup hostuser && \
         apk del shadow; \
     fi
+
 
 LABEL afterapk="php-fpm-alpine-$PHP_VERSION"
 
