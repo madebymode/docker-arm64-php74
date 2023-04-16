@@ -66,7 +66,11 @@ ARG HOST_USER_UID
 # Change www-data user and group IDs to match the host user and group IDs if the arguments are passed
 RUN if [ -n "$HOST_USER_UID" ] && [ -n "$HOST_USER_GID" ]; then \
         apk add shadow && \
-        addgroup -g $HOST_USER_GID hostgroup && \
+        if getent group hostgroup >/dev/null; then \
+            groupmod -g $HOST_USER_GID hostgroup; \
+        else \
+            addgroup -g $HOST_USER_GID hostgroup; \
+        fi && \
         adduser -D -u $HOST_USER_UID -G hostgroup hostuser && \
         apk del shadow; \
     fi
