@@ -13,20 +13,16 @@ else
     ln -sf "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/conf.d/php.ini"
 fi
 
-# Set the command for the `exec` command
+# bash and sh commands should run as www-data
 COMMAND="exec"
 if [ -n "$HOST_USER_UID" ] && [ -n "$HOST_USER_GID" ]; then
     COMMAND="su-exec www-data"
 fi
-if [ "$EXEC_AS_ROOT" = "true" ] || [ "$EXEC_AS_ROOT" = "1" ]; then
+# run as root
+if [ "$EXEC_AS_ROOT" = "true" ] || [ "$EXEC_AS_ROOT" = "1" ] || [ "$1" = "php-fpm" ]; then
     COMMAND="exec"
 fi
 
-# always execute php-fpm (default behavior) as root
-if [ "$1" = "php-fpm" ]; then
-    COMMAND="exec"
-    shift
-fi
 
 # Execute the passed command with the correct user
 $COMMAND "$@"
