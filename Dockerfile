@@ -58,6 +58,17 @@ RUN docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/i
     opcache && \
     apk del -f .build-deps
 
+ARG HOST_USER_GID
+ARG HOST_USER_UID
+
+# Change www-data user and group IDs to match the host user and group IDs if the arguments are passed
+RUN if [ -n "$HOST_USER_UID" ] && [ -n "$HOST_USER_GID" ]; then \
+        apk add shadow && \
+        usermod -u $HOST_USER_UID www-data && \
+        groupmod -g $HOST_USER_GID www-data && \
+        apk del shadow; \
+    fi
+
 LABEL afterapk="php-fpm-alpine-$PHP_VERSION"
 
 ARG HOST_ENV=development
