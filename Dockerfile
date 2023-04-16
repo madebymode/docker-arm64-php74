@@ -90,8 +90,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV PATH="./vendor/bin:$PATH"
 
-# Setup Working Dir
-WORKDIR /app
+# Setup Working Dir to model BH
+WORKDIR /
 
 # Add Healthcheck
 HEALTHCHECK --interval=5s --timeout=1s \
