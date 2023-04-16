@@ -13,14 +13,20 @@ else
     ln -sf "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/conf.d/php.ini"
 fi
 
-# Set the user for the `exec` command
-USER_COMMAND="exec"
+# Set the command for the `exec` command
+COMMAND="exec"
 if [ -n "$HOST_USER_UID" ] && [ -n "$HOST_USER_GID" ]; then
-    USER_COMMAND="su-exec www-data"
+    COMMAND="su-exec www-data"
 fi
 if [ "$EXEC_AS_ROOT" = "true" ] || [ "$EXEC_AS_ROOT" = "1" ]; then
-    USER_COMMAND="exec"
+    COMMAND="exec"
+fi
+
+# always execute php-fpm (default behavior) as root
+if [ "$1" = "php-fpm" ]; then
+    COMMAND="exec"
+    shift
 fi
 
 # Execute the passed command with the correct user
-$USER_COMMAND "$@"
+$COMMAND "$@"
