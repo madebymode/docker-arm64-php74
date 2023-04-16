@@ -58,6 +58,9 @@ RUN docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/i
     opcache && \
     apk del -f .build-deps
 
+# Create a default opcache configuration file
+RUN echo 'opcache.enable=1' > "$PHP_INI_DIR/conf.d/docker-php-ext-opcache.default"
+
 LABEL afterapk="php-fpm-alpine-$PHP_VERSION"
 
 ARG HOST_ENV=development
